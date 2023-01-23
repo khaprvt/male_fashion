@@ -27,7 +27,7 @@ class BlogModel(models.Model):
     
     
     def __str__(self):
-        return self.title
+        return f"{self.title[:100]} ..."
     
     
     class Meta:
