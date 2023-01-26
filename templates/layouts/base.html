@@ -23,6 +23,8 @@
     <link rel="stylesheet" href="{% static 'main/css/owl.carousel.min.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'main/css/slicknav.min.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'main/css/style.css' %}" type="text/css">
+    <!--Plugin CSS file with desired skin-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css"/>
 </head>
 
 <body>
@@ -45,8 +47,8 @@
     <div class="search-model">
         <div class="h-100 d-flex align-items-center justify-content-center">
             <div class="search-close-switch">+</div>
-            <form class="search-model-form">
-                <input type="text" id="search-input" placeholder="Search here.....">
+            <form class="search-model-form" action="{% url 'products:all' %}">
+                <input type="text" id="search-input" name="q" value="{{ request.GET.q }}" placeholder="Search here.....">
             </form>
         </div>
     </div>
@@ -63,6 +65,13 @@
     <script src="{% static 'main/js/mixitup.min.js' %}"></script>
     <script src="{% static 'main/js/owl.carousel.min.js' %}"></script>
     <script src="{% static 'main/js/main.js' %}"></script>
+    <!--jQuery-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!--Plugin JavaScript file-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/js/ion.rangeSlider.min.js"></script>
+    {% block extra_js %}
+    
+    {% endblock extra_js %}
 </body>
 
 </html>

@@ -67,10 +67,10 @@
                     <nav class="header__menu mobile-menu">
                         <ul>
                             <li class="active"><a href="{% url 'main:home' %}">Home</a></li>
-                            <li><a href="./shop.html">Shop</a></li>
+                            <li><a href="{% url 'products:all' %}">Shop</a></li>
                             <li><a href="#">Pages</a>
                                 <ul class="dropdown">
-                                    <li><a href="./about.html">About Us</a></li>
+                                    <li><a href="{% url 'main:about-us' %}">About Us</a></li>
                                     <li><a href="./shop-details.html">Shop Details</a></li>
                                     <li><a href="./shopping-cart.html">Shopping Cart</a></li>
                                     <li><a href="./checkout.html">Check Out</a></li>

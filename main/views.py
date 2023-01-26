@@ -12,7 +12,7 @@ class HomeView(TemplateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['blogs'] = BlogModel.objects.order_by('-pk')[:3]
+        # context['blogs'] = BlogModel.objects.order_by('-pk')[:3]
         context['banners'] = BannerModel.objects.filter(status=True)
         return context
     
@@ -32,3 +32,8 @@ class ContactCreateView(CreateView):
     
     def get_success_url(self):
         return reverse('main:contact')
+    
+    
+    
+class AboutUsView(TemplateView):
+    template_name = 'main/about.html'

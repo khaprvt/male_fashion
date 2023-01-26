@@ -1,0 +1,128 @@
+{% load static %}
+
+<div class="shop__sidebar">
+    <div class="shop__sidebar__search">
+        <form action="{% url 'products:all' %}">
+            <input type="text" placeholder="Search..." name="q" value="{{ request.GET.q }}">
+            <button type="submit"><span class="icon_search"></span></button>
+        </form>
+        <a href="{% url 'products:all' %}" class="clear_search">Clear search</a>
+    </div>
+    <div class="shop__sidebar__accordion">
+        <div class="accordion" id="accordionExample">
+            <div class="card">
+                <div class="card-heading">
+                    <a data-toggle="collapse" data-target="#collapseOne">Categories</a>
+                </div>
+                <div id="collapseOne" class="collapse show" data-parent="#accordionExample">
+                    <div class="card-body">
+                        <div class="shop__sidebar__categories">
+                            <ul class="nice-scroll">
+                                {% for category in categories %}
+                                    <li><a href="#"
+                                        "{% if category.id|stringformat:'i' == request.GET.brand %}
+                                        style="color: #000000;"
+                                        {% endif %}"
+                                        onclick="addParam('cat', {{ category.id }})">
+                                        {{ category.name }} ({{ category.products.count }})
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-heading">
+                    <a data-toggle="collapse" data-target="#collapseTwo">Branding</a>
+                </div>
+                <div id="collapseTwo" class="collapse show" data-parent="#accordionExample">
+                    <div class="card-body">
+                        <div class="shop__sidebar__brand">
+                            <ul class="nice-scroll">
+                                {% for brand in brands %}
+                                    <li><a href="#" 
+                                        {% if brand.id|stringformat:'i' == request.GET.brand %}
+                                        style="color: #000000"
+                                        {% endif %}"
+                                        onclick="addParam('brand', {{ brand.id }})">
+                                        {{ brand.name }} ({{ brand.products.count }})
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-heading">
+                    <a data-toggle="collapse" data-target="#collapseThree">Filter Price</a>
+                </div>
+                <div id="collapseThree" class="collapse show" data-parent="#accordionExample">
+                    <div class="card-body">
+                        <div class="shop__sidebar__price">
+                            <input type="text" class="js-range-slider" name="my_range" value="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-heading">
+                    <a data-toggle="collapse" data-target="#collapseFour">Size</a>
+                </div>
+                <div id="collapseFour" class="collapse show" data-parent="#accordionExample">
+                    <div class="card-body">
+                        <div class="shop__sidebar__size">
+                            {% for size in sizes  %}
+                                <label for="{{ size.size }}" 
+                                    class="{% if size.id|stringformat:'i' == request.GET.size %} active {% endif %}">
+                                    {{ size.size }}
+                                    <input type="radio" id="{{ size.size }}" onchange="addParam('size', {{ size.id }})">
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-heading">
+                    <a data-toggle="collapse" data-target="#collapseFive">Colors</a>
+                </div>
+                <div id="collapseFive" class="collapse show" data-parent="#accordionExample">
+                    <div class="card-body">
+                        <div class="shop__sidebar__color">
+                            {% for color in colors %}
+                                <a href="#" 
+                                class="{% if color.id|stringformat:'i' == request.GET.color %} active {% endif %}"
+                                onclick="addParam('color', {{ color.id }})" style="background-color: {{ color.code }};">
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-heading">
+                    <a data-toggle="collapse" data-target="#collapseSix">Tags</a>
+                </div>
+                <div id="collapseSix" class="collapse show" data-parent="#accordionExample">
+                    <div class="card-body">
+                        <div class="shop__sidebar__tags">
+                            {% for tag in tags %}
+                                <a href="#"
+                                    {% if tag.id|stringformat:'i' == request.GET.tag %}
+                                    style="background-color: #111111; color: #ffffff;"
+                                    {% endif %}
+                                    onclick="addParam('tag', {{ tag.id }})">
+                                    {{ tag.name }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

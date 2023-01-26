@@ -91,23 +91,23 @@
                             </div>
                         </div>
                         <div class="container">
-                            <hr>
+                            <hr class="mb-2">
                             {% for comment in object.comments.values %}
-                            <div class="row mb-3">
+                            <div class="row mb-1">
                                 <div class="blog__details__author__pic mr-2">
                                     <img src="{{ object.user.user_image.url }}" class="ml-3" style="width: 0.8cm;; height: 0.8cm" alt="{{ object.user }} image">
                                 </div>
                                 <div class="blog__details__author__text mt-1">
                                     <strong>{{ object.user.username }}</strong>
                                 </div>
-                                <div class="text-right mt-1" style="position: absolute; right: 0px;">
+                                <div class="text-right mt-1" style="position: absolute; right: 20px;">
                                     <small>{{ comment.created_at|timesince }}</small>
                                 </div>
                                 <div class="col-12 mt-2">
                                     <p class="ml-2">
                                         {{ comment.comment }}
                                     </p>
-                                    <hr>
+                                    <hr class="mb-1">
                                 </div>
                             </div>
                             {% endfor %}

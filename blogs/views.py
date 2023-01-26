@@ -7,7 +7,7 @@ from .forms import CommentForm
 
 class BlogListView(ListView):
     template_name = 'main/blog.html'
-    queryset = BlogModel.objects.all()
+    paginate_by = 6
     
     
     def get_queryset(self):
