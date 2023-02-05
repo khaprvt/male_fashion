@@ -41,12 +41,14 @@ INSTALLED_APPS = [
     
     'ckeditor',
     'ckeditor_uploader',
+    'crispy_forms',
     
     
     'users',
     'main',
     'products',
     'blogs',
+    'orders',
 ]
 
 MIDDLEWARE = [
@@ -152,6 +154,8 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.UserModel'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 

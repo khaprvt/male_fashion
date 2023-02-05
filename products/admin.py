@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ProductModel, CategoryModel, BrandModel, TagModel, SizeModel, ColorModel
+from .models import ProductModel, CategoryModel, BrandModel, TagModel, SizeModel, ColorModel, ProductImagesModel
 from .forms import AddColorForm
 from django.utils.safestring import mark_safe
 
@@ -7,11 +7,11 @@ from django.utils.safestring import mark_safe
 
 @admin.register(ProductModel)
 class ProductModelAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'real_price', 'price', 'discount']
+    list_display = ['id', 'title', 'real_price', 'price', 'discount', 'sale']
     list_display_links = ['id', 'title', 'real_price', 'price', 'discount']
     search_fields = ['title']
     list_filter = ['created_at']
-    readonly_fields = ['real_price']
+    readonly_fields = ['real_price', 'sale']
 
 
 
@@ -48,13 +48,6 @@ class SizeModelAdmin(admin.ModelAdmin):
 
 
 
-# @admin.register(ColorModel)
-# class ColorModelAdmin(admin.ModelAdmin):
-#     list_display = ['id', 'code']
-#     list_display_links = ['id', 'code']
-#     search_fields = ['code']
-
-
 @admin.register(ColorModel)
 class ColorModelAdmin(admin.ModelAdmin):
     list_display = ['id', 'code', 'show_color']
@@ -63,3 +56,5 @@ class ColorModelAdmin(admin.ModelAdmin):
 
     def show_color(self, obj):
         return mark_safe(f"<div style='background-color: {obj.code}; width: 100px; height: 20px;'></div>")
+    
+admin.site.register(ProductImagesModel)

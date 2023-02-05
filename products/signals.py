@@ -1,5 +1,5 @@
 from django.dispatch import receiver
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_save
 from .models import ProductModel
 
 
@@ -11,3 +11,10 @@ def real_price(sender, instance, **kwargs):
         instance.real_price = 0
         return instance.real_price
 
+
+@receiver(pre_save, sender=ProductModel)
+def set_sale(sender, instance, *args, **kwargs):
+    if instance.is_discount():
+        instance.sale = True
+    else:
+        instance.sale = False

@@ -46,7 +46,7 @@
                                     <option {% if request.GET.sort == '-real_price' %}selected{% endif %} value="-real_price">
                                         High To Low
                                     </option>
-                                    <!-- <option {% if request.GET.sort == 'discount' %}selected{% endif %} value="discount">Sale</option> -->
+                                    <option {% if request.GET.sort == 'sale' %}selected{% endif %} value="sale">Sale</option>
                                 </select>
                             </div>
                         </div>
@@ -61,16 +61,45 @@
                                 <span class="label bg-dark text-light">Sale</span>
                                 {% endif %}
                                 {% if object.is_new %}
-                                <span style="width: 66px; height: 22.5px;" class="label bg-white text-dark {% if object.is_discount %}mt-4{% endif %}">New</span>
+                                <span style="width: 64px; height: 22.5px;" class="label bg-white text-dark {% if object.is_discount %}mt-4{% endif %}">New</span>
                                 {% endif %}
                                 <ul class="product__hover">
-                                    <li><a href="#"><img src="{% static 'main/img/icon/heart.png' %}" alt=""></a></li>
-                                    <li><a href="#"><img src="{% static 'main/img/icon/search.png' %}" alt=""></a></li>
+                                    {% if request.user.is_authenticated %}
+                                        {% if request.user|is_wishlist:object %}
+                                            <li>
+                                                <a href="{% url 'products:wishlist' id=object.id %}?next={{ request.path }}">
+                                                    <img src="{% static 'main/img/heart.png' %}" alt="">
+                                                </a>
+                                            </li>
+                                        {% else %}
+                                            <li>
+                                                <a href="{% url 'products:wishlist' id=object.id %}?next={{ request.path }}">
+                                                    <img src="{% static 'main/img/icon/heart.png' %}" alt="">
+                                                </a>
+                                            </li>
+                                        {% endif %}
+
+                                    {% else %}
+                                        <li><a href="{% url 'users:login' %}"><img src="{% static 'main/img/icon/heart.png' %}" alt=""></a></li>
+                                    {% endif %}
+                                    <li><a href="{% url 'products:detail' pk=object.pk %}"><img src="{% static 'main/img/icon/search.png' %}" alt=""></a></li>
                                 </ul>
                             </div>
                             <div class="product__item__text">
                                 <h6>{{ object.title }}</h6>
-                                <a href="#" class="add-cart">+ Add To Cart</a>
+                                <!-- <a href="#" class="add-cart">+ Add To Cart</a> -->
+                                {% is_cart request object.id as value %}
+                                {% if value %}
+                                    <a href="{% url 'products:cart' id=object.id %}?next={{ request.path }}"
+                                        class="add-cart" style="color: black;">
+                                        - Remove from cart
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'products:cart' id=object.id %}?next={{ request.path }}"
+                                        class="add-cart">
+                                        + Add To Cart
+                                    </a>
+                                {% endif %}
                                 <div class="rating">
                                     <i class="fa fa-star-o"></i>
                                     <i class="fa fa-star-o"></i>
@@ -91,15 +120,11 @@
                                     {% endif %}
                                 </h5>
                                 <div class="product__color__select">
-                                    <label for="pc-4">
-                                        <input type="radio" id="pc-4">
-                                    </label>
-                                    <label class="active black" for="pc-5">
-                                        <input type="radio" id="pc-5">
-                                    </label>
-                                    <label class="grey" for="pc-6">
-                                        <input type="radio" id="pc-6">
-                                    </label>
+                                    {% for color in object.color.all %}
+                                        <label for="{{ forloop.counter }}" style="background-color: {{ color.code }}">
+                                            <input type="radio" id="{{ forloop.counter }}">
+                                        </label>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>

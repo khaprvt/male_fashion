@@ -13,6 +13,10 @@
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
     rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+    <!--Plugin CSS file with desired skin-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css"/>
 
     <!-- Css Styles -->
     <link rel="stylesheet" href="{% static 'main/css/bootstrap.min.css' %}" type="text/css">
@@ -23,8 +27,9 @@
     <link rel="stylesheet" href="{% static 'main/css/owl.carousel.min.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'main/css/slicknav.min.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'main/css/style.css' %}" type="text/css">
-    <!--Plugin CSS file with desired skin-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css"/>
+    
+    <link rel="stylesheet" href="{% static 'main/fonts/icomoon/style.css' %}">
+    <link rel="stylesheet" href="{% static 'main/css/login_style.css' %}">
 </head>
 
 <body>
@@ -69,6 +74,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <!--Plugin JavaScript file-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/js/ion.rangeSlider.min.js"></script>
+
+    <script src="{% static 'main/js/popper.min.js' %}"></script>
+    <script src="{% static 'main/js/login_main.js' %}"></script>
     {% block extra_js %}
     
     {% endblock extra_js %}

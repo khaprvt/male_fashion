@@ -20,7 +20,7 @@
                             <ul class="nice-scroll">
                                 {% for category in categories %}
                                     <li><a href="#"
-                                        "{% if category.id|stringformat:'i' == request.GET.brand %}
+                                        {% if category.id|stringformat:'i' == request.GET.category %}
                                         style="color: #000000;"
                                         {% endif %}"
                                         onclick="addParam('cat', {{ category.id }})">
@@ -94,9 +94,8 @@
                     <div class="card-body">
                         <div class="shop__sidebar__color">
                             {% for color in colors %}
-                                <a href="#" 
-                                class="{% if color.id|stringformat:'i' == request.GET.color %} active {% endif %}"
-                                onclick="addParam('color', {{ color.id }})" style="background-color: {{ color.code }};">
+                                <a href="#" onclick="addParam('color', {{ color.id }})">
+                                    <label style="background-color: {{ color.code }};" for="{{ color.code }}"></label>
                                 </a>
                             {% endfor %}
                         </div>

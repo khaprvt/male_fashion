@@ -1,0 +1,164 @@
+{% extends 'layouts/base.html' %}
+{% load static my_tags %}
+{% block content %}
+    <!-- Breadcrumb Section Begin -->
+    <section class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__text">
+                        <h4>Shop</h4>
+                        <div class="breadcrumb__links">
+                            <a href="{% url 'main:home' %}">Home</a>
+                            <span>Wishlist</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Breadcrumb Section End -->
+
+    <!-- Shop Section Begin -->
+    <section class="shop spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="shop__product__option">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="shop__product__option__left">
+                                    <p>Showing {{ page_obj.start_index }}-{{ page_obj.end_index }} of {{ page_obj.paginator.count }} results</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="shop__product__option__right">
+                                    <p>Sort by Price:</p>
+                                    <select onchange="addParam('sort', this.value)">
+                                        <option value="">-----</option>
+                                        <option {% if request.GET.sort == 'real_price' %}selected{% endif %} value="real_price">
+                                            Low To High
+                                        </option>
+                                        <option {% if request.GET.sort == '-real_price' %}selected{% endif %} value="-real_price">
+                                            High To Low
+                                        </option>
+                                        <option {% if request.GET.sort == 'sale' %}selected{% endif %} value="sale">Sale</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        {% for object in object_list %}
+                            <div class="col-lg-3 col-md-4 col-sm-6">
+                                <div class="product__item">
+                                    <div class="product__item__pic set-bg" data-setbg="{{ object.main_image.url }}">
+                                        {% if object.is_discount %}
+                                        <span class="label bg-dark text-light">Sale</span>
+                                        {% endif %}
+                                        {% if object.is_new %}
+                                        <span style="width: 64px; height: 22.5px;" class="label bg-white text-dark {% if object.is_discount %}mt-4{% endif %}">New</span>
+                                        {% endif %}
+                                        <ul class="product__hover">
+                                            {% if request.user.is_authenticated %}
+                                                {% if request.user|is_wishlist:object %}
+                                                    <li>
+                                                        <a href="{% url 'products:wishlist' id=object.id %}?next={{ request.path }}">
+                                                            <img src="{% static 'main/img/heart.png' %}" alt="">
+                                                        </a>
+                                                    </li>
+                                                {% else %}
+                                                    <li>
+                                                        <a href="{% url 'products:wishlist' id=object.id %}?next={{ request.path }}">
+                                                            <img src="{% static 'main/img/icon/heart.png' %}" alt="">
+                                                        </a>
+                                                    </li>
+                                                {% endif %}
+        
+                                            {% else %}
+                                                <li><a href="{% url 'users:login' %}"><img src="{% static 'main/img/icon/heart.png' %}" alt=""></a></li>
+                                            {% endif %}
+                                            <li><a href="#"><img src="{% static 'main/img/icon/search.png' %}" alt=""></a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="product__item__text">
+                                        <h6>{{ object.title }}</h6>
+                                        <!-- <a href="#" class="add-cart">+ Add To Cart</a> -->
+                                        {% is_cart request object.id as value %}
+                                        {% if value %}
+                                            <a href="{% url 'products:cart' id=object.id %}?next={{ request.path }}"
+                                                class="add-cart" style="color: black;">
+                                                - Remove from cart
+                                            </a>
+                                        {% else %}
+                                            <a href="{% url 'products:cart' id=object.id %}?next={{ request.path }}"
+                                                class="add-cart">
+                                                + Add To Cart
+                                            </a>
+                                        {% endif %}
+                                        <div class="rating">
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <h5>
+                                            ${% if object.is_discount %} 
+                                            {{ object.real_price }}
+                                                <small>
+                                                    <del class="text-secondary">
+                                                        ${{ object.price }}
+                                                    </del>
+                                                </small>
+                                            {% else %}
+                                            {{ object.price}}
+                                            {% endif %}
+                                        </h5>
+                                        <div class="product__color__select">
+                                            {% for color in object.product.color.all %}
+                                                <label for="pc-4" style="background-color: {{ color.code }}">
+                                                    <input type="radio" id="pc-4">
+                                                </label>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <h1>Empty</h1>
+                        {% endfor %}
+
+                    </div>
+                    {% if page_obj.paginator.count > 12 %}
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="product__pagination">
+                                {% for page in page_obj.paginator.page_range  %}
+                                    <a class="{% if page == page_obj.number %} active {% endif %}" href="?page={{ page }}">{{ page }}</a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Shop Section End -->
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        function addParam(name, value) {
+            var param = new URLSearchParams(window.location.search)
+            if (param.has(name) && param.get(name) == value) {
+                param.delete(name)
+            } else {
+                param.set(name, value)
+            }
+            window.location.search = param.toString()
+        }
+    </script>
+{% endblock extra_js %}

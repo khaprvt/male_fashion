@@ -1,7 +1,10 @@
-from django.db import models
+from django.db import IntegrityError, models
+from django.db.models import Sum
 from django.utils import timezone
 from datetime import timedelta
 import datetime
+
+from users.models import UserModel
 
 # Create your models here.
 
@@ -69,6 +72,7 @@ class ProductModel(models.Model):
     long_description = models.TextField()
     price = models.FloatField()
     real_price = models.FloatField(default=0)
+    sale = models.BooleanField(default=False)
     discount = models.PositiveIntegerField(default=0)
     main_image = models.ImageField(upload_to='products/')
     category = models.ForeignKey(CategoryModel, on_delete=models.CASCADE, related_name='products')
@@ -84,8 +88,14 @@ class ProductModel(models.Model):
     #         return self.price - (self.price * self.discount) / 100
     #     return self.price
     
+    @staticmethod
+    def get_cart_objects(cart_list):
+        # [2, 1, 3]
+        qs = ProductModel.objects.all().filter(id__in=cart_list)
+        return qs
+    
     def is_discount(self):
-        return self.discount != 0
+        return bool(self.discount)
     
     def is_new(self):
         return (timezone.now() - self.created_at).days <= 3
@@ -97,3 +107,38 @@ class ProductModel(models.Model):
         verbose_name = 'product'
         verbose_name_plural = 'products'
         ordering = ('-id',)
+
+
+class WishlistModel(models.Model):
+    product = models.ForeignKey(ProductModel, on_delete=models.RESTRICT)
+    user = models.ForeignKey(UserModel, on_delete=models.RESTRICT)
+
+    def __str__(self):
+        return f"{self.product} {self.user}"
+    
+    @staticmethod
+    def create_or_delete(user, product):
+        try:
+            WishlistModel.objects.create(user=user, product=product)
+        except IntegrityError:
+            WishlistModel.objects.get(user=user, product=product).delete()
+
+    class Meta:
+        verbose_name = 'wishlist'
+        verbose_name_plural = 'wishlists'
+        unique_together = ('user', 'product')
+        
+        
+        
+class ProductImagesModel(models.Model):
+    product = models.OneToOneField(ProductModel, on_delete=models.CASCADE, related_name='images')
+    image_1 = models.ImageField(upload_to='product_images/')
+    image_2 = models.ImageField(upload_to='product_images/', null=True, blank=True)
+    image_3 = models.ImageField(upload_to='product_images/', null=True, blank=True)
+    image_4 = models.ImageField(upload_to='product_images/', null=True, blank=True)
+    image_5 = models.FileField(upload_to='product_files/', null=True, blank=True)
+
+
+    class Meta:
+        verbose_name = 'image'
+        verbose_name_plural = 'images'

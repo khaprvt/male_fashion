@@ -1,0 +1,47 @@
+{% extends "layouts/login_base.html" %}
+{% load static crispy_forms_tags %}
+{% block content %}
+  <div class="d-md-flex half">
+    <div class="bg" style="background-image: url('{% static 'main/img/bg_1.jpg' %}');"></div>
+    <div class="contents">
+
+      <div class="container">
+        <div class="row align-items-center justify-content-center">
+          <div class="col-md-12">
+            <div class="form-block mx-auto">
+              <div class="text-center mb-5">
+                <h3 class="text-uppercase">Login</h3>
+              </div>
+              {{ request.user}}
+              <form action="{% url 'users:login' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group first">
+                  <label for="username">Username</label>
+                  <!-- <input type="text" class="form-control" placeholder="your-email@gmail.com" id="username"> -->
+                  {{ login_form.username|as_crispy_field }}
+                </div>
+                <div class="form-group last mb-3">
+                  <label for="password">Password</label>
+                  <!-- <input type="password" class="form-control" placeholder="Your Password" id="password"> -->
+                  {{ login_form.password|as_crispy_field }}
+                </div>
+                
+                <div class="d-sm-flex mb-5 align-items-center">
+                  <span class="mb-3 mb-sm-0">
+                    <a href="{% url 'users:registration' %}">Registration</a>
+                  </span>
+                  <span class="ml-auto"><a href="#" class="forgot-pass">Forgot Password</a></span> 
+                </div>
+
+                <input type="submit" value="Log In" class="btn btn-block py-2 btn-primary">
+
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+  </div>
+{% endblock content %}

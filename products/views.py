@@ -1,8 +1,68 @@
 from django.shortcuts import render, reverse, redirect
 from django.views.generic import ListView, DetailView
-from .models import ProductModel, CategoryModel, BrandModel, TagModel, ColorModel, SizeModel
+from .models import ProductModel, CategoryModel, BrandModel, TagModel, ColorModel, SizeModel, WishlistModel
 from django.db.models import Max, Min
+
 # Create your views here.
+
+class ShoppingCartView(ListView):
+    template_name = 'main/shopping-cart.html'
+
+    def get_queryset(self):
+        cart = self.request.session.get('cart', [])
+        qs = ProductModel.get_cart_objects(cart)
+        return qs
+
+
+def cart_view(request, id):
+    cart = request.session.get('cart', [])
+    if not cart:
+        request.session['cart'] = []
+        cart = request.session.get('cart', [])
+
+    if id in cart:
+        cart.remove(id)
+    else:
+        cart.append(id)
+
+    request.session['cart'] = cart
+    path = request.GET.get('next', '/')
+    return redirect(path)
+
+
+
+class WishlistListView(ListView):
+    template_name = 'main/wishlist.html'
+    paginate_by = 12
+
+    def get_queryset(self):
+        qs = ProductModel.objects.filter(wishlistmodel__user=self.request.user)
+        sort = self.request.GET.get('sort')
+        if sort:
+            qs = qs.order_by(sort)
+        if sort == 'sale':
+            qs = qs.filter(sale=True)
+        return qs
+
+
+def wishlist_view(request, id):
+    product = ProductModel.objects.get(id=id)
+    WishlistModel.create_or_delete(request.user, product)
+    path = request.GET.get('next', '')
+    return redirect(path)
+
+
+
+
+class ProductDetailView(DetailView):
+    template_name = 'main/shop-details.html'
+    model = ProductModel
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['products'] = ProductModel.objects.all().exclude(id=self.object.id)[:4]
+        return data
+
 
 class ProductListView(ListView):
     template_name = 'main/shop.html'
@@ -49,6 +109,8 @@ class ProductListView(ListView):
         sort = self.request.GET.get('sort')
         if sort:
             qs = qs.order_by(sort)
+        if sort == 'sale':
+            qs = qs.filter(sale=True)
 
         return qs
     
